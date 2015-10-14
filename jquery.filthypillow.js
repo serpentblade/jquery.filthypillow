@@ -3,13 +3,13 @@
  * by aef
  */
 ( function( factory ) {
-	if ( typeof define === 'function' && define.amd ) {
-		define( [ 'jquery' ], factory );
-	} else if ( typeof exports === 'object' ) {
-		module.exports = factory;
-	} else {
-		factory( jQuery );
-	}
+  if ( typeof define === 'function' && define.amd ) {
+    define( [ 'jquery' ], factory );
+  } else if ( typeof exports === 'object' ) {
+    module.exports = factory;
+  } else {
+    factory( jQuery );
+  }
 } ( function( $ ) {
   var pluginName = "filthypillow",
       name = "plugin_" + pluginName,
@@ -20,9 +20,9 @@
         initialDateTime: null, //function returns moment obj
         enableCalendar: true,
         steps: [ "month", "day", "hour", "minute", "meridiem" ],
-				exitOnBackgroundClick: true,
+        exitOnBackgroundClick: true,
         calendar: {
-					isPinned: false,
+          isPinned: false,
           saveOnDateSelect: false
         }
       },
@@ -30,9 +30,9 @@
       returnableMethods = [ "getDate", "isValid" ];
 
   function FilthyPillow( $element, options ) {
-		var calendarOptions = $.extend( {}, defaults.calendar, options.calendar || {} );
+    var calendarOptions = $.extend( {}, defaults.calendar, options.calendar || {} );
     this.options = $.extend( {}, defaults, options );
-		this.options.calendar = calendarOptions;
+    this.options.calendar = calendarOptions;
 
     this.$element = $element;
     this.setup( );
@@ -131,7 +131,7 @@
       if( this.options.enableCalendar ) {
         if( step === "day" || step === "month" )
           this.calendar.show( );
-        else if( !this.options.calendar.isPinned ) 
+        else if( !this.options.calendar.isPinned )
           this.calendar.hide( );
       }
     },
@@ -208,7 +208,7 @@
       else
         fakeValue = this.formatToMoment( step, fakeValue );
 
-			if( !this.isValidDigitInput( fakeValue ) ) {
+      if( !this.isValidDigitInput( fakeValue ) ) {
         if( this.currentDigit === 2 )
           this.currentDigit = 1;
         return;
@@ -229,12 +229,19 @@
     },
 
     onOptionClick: function( e ) {
-      var $target = $( e.target ),
+      var currentStep = this.currentStep,
+          $target = $( e.target ),
           classes = $target.attr( "class" ),
       //figure out which step was clicked
           step = classes.match( this.stepRegExp );
       if( step && step.length )
+      {
         this.activateSelectorTool( step[ 0 ] );
+        if (step[0] === 'meridiem' && currentStep === 'meridiem') {
+          this.moveUp();
+        }
+      }
+
     },
 
     onKeyUp: function( e ) {
@@ -342,8 +349,8 @@
 
       this.$document.on( "keydown." + this.id, $.proxy( this.onKeyDown, this ) );
       this.$document.on( "keyup." + this.id, $.proxy( this.onKeyUp, this ) );
-			if( this.options.exitOnBackgroundClick )
-				this.$window.on( "click." + this.id, $.proxy( this.onClickToExit, this ) );
+      if( this.options.exitOnBackgroundClick )
+        this.$window.on( "click." + this.id, $.proxy( this.onClickToExit, this ) );
     },
 
     removeEvents: function( ) {
@@ -447,9 +454,9 @@
     getDate: function( ) {
       return this.dateTime.clone( );
     },
-		isValid: function( ) {
-			return !this.isError;
-		},
+    isValid: function( ) {
+      return !this.isError;
+    },
     updateDateTime: function( dateObj, moveNext ) {
       this.setDateTime( dateObj, moveNext );
       this.renderDateTime( );
